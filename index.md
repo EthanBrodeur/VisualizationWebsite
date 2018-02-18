@@ -6,5 +6,5 @@
 
 
 <script src="processing.js"></script>
-<canvas> data-processing-sources="EthanBrodeur_a3.pde Line.pde ToolTip.pde DimensionButton.pde FlipButton.pde"</canvas>
+<canvas data-processing-sources="EthanBrodeur_a3.pde Line.pde ToolTip.pde DimensionButton.pde FlipButton.pde" width="1100" height="700"></canvas>
 
