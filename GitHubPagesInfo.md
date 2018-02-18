@@ -1,4 +1,4 @@
-## [Back To InfoVis Project](ethanbrodeur.github.io/VisualizationWebsite/index.md)
+## [Back To InfoVis Project](/index.md)
 
 ## Welcome to GitHub Pages
 
