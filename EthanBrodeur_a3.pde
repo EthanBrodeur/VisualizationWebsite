@@ -49,6 +49,7 @@ void setup() {
 }
 
 void draw() {
+  println("please log to console");
   lines.clear(); //absurdly inefficient
   background(40);
   textSize(width/70.0);
