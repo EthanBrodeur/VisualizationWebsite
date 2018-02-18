@@ -17,7 +17,6 @@ void setup() {
   activeFeatureIndex = 0;
   lines = new HashSet<HashSet<Line>>();
   FILENAME = "students.csv";
-  surface.setResizable(true);
   size(1100, 700);
 
   smooth(4);
