@@ -24,7 +24,7 @@ void setup() {
   lines = new HashSet<HashSet<Line>>();
   FILENAME = "students.csv";
   // surface.setResizable(true);
-  size(1100, 700);
+  size(800,800);
 
   smooth(4);
   
