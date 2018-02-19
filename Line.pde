@@ -1,7 +1,7 @@
 class Line {
   float x, y, xx, yy, minx, maxx, miny, maxy;
   String name;
-  TableRow tr;
+  String[] tr;
   public Line(float x, float y, float xx, float yy) {
     this.x = x;
     this.y = y;
@@ -16,7 +16,7 @@ class Line {
   public void setName(String name) {
     this.name = name;
   }
-  public void setTableRow(TableRow tr) {
+  public void setTableRow(String[] tr) {
     this.tr = tr;
   }
 

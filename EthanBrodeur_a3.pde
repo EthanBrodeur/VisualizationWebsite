@@ -1,4 +1,4 @@
-Table table;
+//Table table;
 String FILENAME;
 float left, right, top, bottom;
 String[] featureNames;
@@ -12,21 +12,30 @@ import java.util.List;
 HashSet<HashSet<Line>> lines;
 int activeFeatureIndex;
 boolean[] flipped;
+int numCols;
+String[] rows;
 
+void readFile() {
+  rows = loadStrings(FILENAME);
+  numCols = split(rows[0], ",").length;
+}
 void setup() {
   activeFeatureIndex = 0;
   lines = new HashSet<HashSet<Line>>();
   FILENAME = "students.csv";
+  // surface.setResizable(true);
   size(1100, 700);
 
   smooth(4);
-  table = loadTable(FILENAME, "header");
-  mins= new float[table.getColumnCount()-1];
-  maxs = new float[table.getColumnCount()-1];
-  xVerts = new float[table.getColumnCount()-1];
+  
+  readFile();
+  //table = loadTable(FILENAME, "header");
+  mins= new float[numCols-1];
+  maxs = new float[numCols-1];
+  xVerts = new float[numCols-1];
   featureNames = getFeatureNames();
-  buttons = new DimensionButton[table.getColumnCount()-1];
-  flips = new FlipButton[table.getColumnCount() - 1];
+  buttons = new DimensionButton[numCols-1];
+  flips = new FlipButton[numCols - 1];
 
   boxBegX = 0;
   boxBegY = 0;
@@ -38,17 +47,16 @@ void setup() {
   right = width*.95;
   top = 0+height*0.05;
 
-  for (int i = 1; i < table.getColumnCount(); i++) {
+  for (int i = 1; i < numCols; i++) {
     initButtonSetup(i);
   }
-  flipped = new boolean[table.getColumnCount()];
+  flipped = new boolean[numCols];
   for (boolean val : flipped) {
     val = false;
   }
 }
 
 void draw() {
-  println("please log to console");
   lines.clear(); //absurdly inefficient
   background(40);
   textSize(width/70.0);
@@ -56,8 +64,8 @@ void draw() {
   bottom = height*.85;
   right = width*.95;
   top = 0+height*0.05;
-  for (int i = 1; i < table.getColumnCount(); i++) {
-    drawParallelLine(table.rows(), table.getColumnCount(), i);
+  for (int i = 1; i < numCols; i++) {
+    drawParallelLine(numCols, i);
   }
   drawCoordinates();
   stroke(0);
@@ -67,7 +75,8 @@ void draw() {
 
 void drawCoordinates() {
   int ttCounted = 1;
-  for (TableRow row : table.rows()) {
+  for (int h = 1; h < rows.length; h++) {
+    String[] row = split(rows[h], ",");
     stroke(0, 0, 255); // draw blue by default
     HashSet<Line> thisDataPointsLines = new HashSet<Line>();
     boolean online = false; // by default, we are not hovering over the current line
@@ -75,9 +84,9 @@ void drawCoordinates() {
     // get this height
     float prevHeight = 0;
     float prevX = 0;
-    for (int i = 1; i < table.getColumnCount(); i++) {
-      float xPos = (table.getColumnCount() != 2) ? (float)(i-1)/(table.getColumnCount()-2) * (right-left) + left : (left+right)/2;
-      float curVal = row.getFloat(i); 
+    for (int i = 1; i < numCols; i++) {
+      float xPos = (numCols != 2) ? (float)(i-1)/(numCols-2) * (right-left) + left : (left+right)/2;
+      float curVal = (float) parseFloat(row[i]); 
       float maxPerc = (curVal-mins[i-1])/(maxs[i-1]-mins[i-1]);
       float heightOfPoint = 0;
       if (!flipped[i]) {
@@ -86,10 +95,10 @@ void drawCoordinates() {
         heightOfPoint = bottom-(bottom-top)*(1.0-maxPerc);
       }
       if (i != 1) {
-        stroke(0, 0, colorIntensity(row.getFloat(activeFeatureIndex+1), mins[activeFeatureIndex], maxs[activeFeatureIndex]));
+        stroke(0, 0, colorIntensity((float) parseFloat(row[activeFeatureIndex+1]), mins[activeFeatureIndex], maxs[activeFeatureIndex]));
         line(xPos, heightOfPoint, prevX, prevHeight);
         Line l = new Line(xPos, heightOfPoint, prevX, prevHeight);
-        l.setName(row.getString(0));
+        l.setName(row[0]);
         l.setTableRow(row);
         thisDataPointsLines.add(l);
         if (l.onLine(mouseX, mouseY)) {
@@ -119,7 +128,7 @@ void drawCoordinates() {
   }
 }
 
-void drawParallelLine(Iterable<TableRow> rows, int numCols, int index) {
+void drawParallelLine(int numCols, int index) {
   float xPos = (numCols != 2) ? (float)(index-1)/(numCols-2) * (right-left) + left : (left+right)/2;
   xVerts[index-1] = xPos;
   stroke(230);
@@ -129,8 +138,9 @@ void drawParallelLine(Iterable<TableRow> rows, int numCols, int index) {
   // iterate through the rows of this column and get the min and max
   float min = 1000000; // arbitrary
   float max = -10000000; // arbitrary
-  for (TableRow row : rows) {
-    float val = row.getFloat(index);
+  for (int i = 1; i < rows.length; i++) {
+    String[] row = split(rows[i], ",");
+    float val = (float) parseFloat(row[index]);
     min = ( val < min ? val : min);
     max = ( val > max ? val : max);
   }
@@ -190,15 +200,13 @@ void mouseReleased() {
 }
 
 String[] getFeatureNames() {
-  String[] ret = new String[table.getColumnCount()-1]; 
-  table = loadTable(FILENAME); 
-  for (TableRow row : table.rows()) {
-    for (int i = 1; i < table.getColumnCount(); i++) {
-      ret[i-1] = row.getString(i);
+  String[] firstLine = split(rows[0], ",");
+  String[] ret = new String[numCols-1]; 
+    for (int i = 1; i < numCols; i++) {
+      ret[i-1] = firstLine[i];
     }
-    break;
-  }
   return ret;
+  
 }
 
 public int closestVertLine() {
@@ -223,7 +231,6 @@ public float xOfClosestVertLine(int closestLine) {
 }
 
 public void initButtonSetup(int i) {
-  int numCols = this.table.getColumnCount();
   float xPos = (numCols != 2) ? (float)(i-1)/(numCols-2) * (right-left) + left : (left+right)/2;
   stroke(230);
   fill(230);

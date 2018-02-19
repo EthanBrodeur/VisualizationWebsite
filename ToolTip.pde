@@ -14,7 +14,7 @@ class ToolTip {
 
     float tipHeight = height/15;
     String display = name + ": (";
-    display += line.tr.getFloat(closestVertLine()+1) +")";
+    display += (float) parseFloat(line.tr[closestVertLine()+1]) +")";
     float offset = 0;
     float tipWidth = textWidth(display);
     if (mouseX - tipWidth < 0) {
