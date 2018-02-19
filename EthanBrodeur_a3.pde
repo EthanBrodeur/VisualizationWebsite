@@ -9,7 +9,7 @@ DimensionButton[] buttons;
 FlipButton[] flips;
 import java.util.HashSet;
 import java.util.List;
-HashSet<HashSet<Line>> lines;
+HashSet<HashSet<LineSegment>> lines;
 int activeFeatureIndex;
 boolean[] flipped;
 int numCols;
@@ -21,7 +21,7 @@ void readFile() {
 }
 void setup() {
   activeFeatureIndex = 0;
-  lines = new HashSet<HashSet<Line>>();
+  lines = new HashSet<HashSet<LineSegment>>();
   FILENAME = "students.csv";
   // surface.setResizable(true);
   size(800,800);
@@ -78,8 +78,8 @@ void drawCoordinates() {
   for (int h = 1; h < rows.length; h++) {
     String[] row = split(rows[h], ",");
     stroke(0, 0, 255); // draw blue by default
-    HashSet<Line> thisDataPointsLines = new HashSet<Line>();
-    boolean online = false; // by default, we are not hovering over the current line
+    HashSet<LineSegment> thisDataPointsLines = new HashSet<LineSegment>();
+    boolean isHover = false; // by default, we are not hovering over the current line
 
     // get this height
     float prevHeight = 0;
@@ -97,18 +97,18 @@ void drawCoordinates() {
       if (i != 1) {
         stroke(0, 0, colorIntensity((float) parseFloat(row[activeFeatureIndex+1]), mins[activeFeatureIndex], maxs[activeFeatureIndex]));
         line(xPos, heightOfPoint, prevX, prevHeight);
-        Line l = new Line(xPos, heightOfPoint, prevX, prevHeight);
+        LineSegment l = new LineSegment(xPos, heightOfPoint, prevX, prevHeight);
         l.setName(row[0]);
         l.setTableRow(row);
         thisDataPointsLines.add(l);
         if (l.onLine(mouseX, mouseY)) {
-          online = true;
+          isHover = true;
           ToolTip tt = new ToolTip(l, ttCounted);
           tt.drawToolTip();
           ttCounted++;
         }
         if (l.boxHover(boxBegX, boxBegY, boxCurX, boxCurY)) {
-          online = true;
+          isHover = true;
         }
       }
       if (!lines.contains(thisDataPointsLines)) {
@@ -117,10 +117,10 @@ void drawCoordinates() {
       prevHeight = heightOfPoint;
       prevX = xPos;
     }
-    if (online) {
+    if (isHover) {
       stroke(255, 215, 0);
       fill(255, 215, 0);
-      for (Line gold : thisDataPointsLines) {
+      for (LineSegment gold : thisDataPointsLines) {
         line(gold.x, gold.y, gold.xx, gold.yy);
       }
     }

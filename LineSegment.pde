@@ -1,8 +1,8 @@
-class Line {
+class LineSegment {
   float x, y, xx, yy, minx, maxx, miny, maxy;
   String name;
   String[] tr;
-  public Line(float x, float y, float xx, float yy) {
+  public LineSegment(float x, float y, float xx, float yy) {
     this.x = x;
     this.y = y;
     this.xx = xx;
@@ -37,16 +37,16 @@ class Line {
   }
 
   public boolean boxHover(float xl, float yt, float xr, float yb) {
-    Line box1 = new Line(xl, yt, xl, yb);
-    Line box2 = new Line(xl, yt, xr, yt);
-    Line box3 = new Line(xr, yt, xr, yb);
-    Line box4 = new Line(xl, yb, xr, yb);
+    LineSegment box1 = new LineSegment(xl, yt, xl, yb);
+    LineSegment box2 = new LineSegment(xl, yt, xr, yt);
+    LineSegment box3 = new LineSegment(xr, yt, xr, yb);
+    LineSegment box4 = new LineSegment(xl, yb, xr, yb);
     if (lineIntersection(this, box1)||lineIntersection(this, box2)||lineIntersection(this, box3)||lineIntersection(this, box4)) {
       return true;
     }
     return false;
   }
-  public boolean lineIntersection(Line l1, Line l2) {
+  public boolean lineIntersection(LineSegment l1, LineSegment l2) {
     if ((l2.minx > l1.maxx) || (l1.minx>l2.maxx)) {
       //return false;
     }
@@ -71,7 +71,7 @@ class Line {
     if (obj == null) {
       return false;
     }
-    if ((((Line)obj).x == this.x) && (((Line)obj).y == this.y) && (((Line)obj).xx == this.xx) && (((Line)obj).yy == this.yy)) {
+    if ((((LineSegment)obj).x == this.x) && (((LineSegment)obj).y == this.y) && (((LineSegment)obj).xx == this.xx) && (((LineSegment)obj).yy == this.yy)) {
       return true;
     } else return false;
   }

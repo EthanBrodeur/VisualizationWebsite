@@ -1,10 +1,10 @@
 class ToolTip {
   String name;
-  Line line;
+  LineSegment lineseg;
   int positionIndex;
-  public ToolTip(Line line, int positionIndex) {
-    this.name = line.name;
-    this.line = line;
+  public ToolTip(LineSegment lineseg, int positionIndex) {
+    this.name = lineseg.name;
+    this.lineseg = lineseg;
     this.positionIndex = positionIndex;
   }
 
@@ -14,7 +14,7 @@ class ToolTip {
 
     float tipHeight = height/15;
     String display = name + ": (";
-    display += (float) parseFloat(line.tr[closestVertLine()+1]) +")";
+    display += (float) parseFloat(lineseg.tr[closestVertLine()+1]) +")";
     float offset = 0;
     float tipWidth = textWidth(display);
     if (mouseX - tipWidth < 0) {
