@@ -1,16 +1,16 @@
 class LineSegment {
-  float x, y, xx, yy, minx, maxx, miny, maxy;
+  float xone, yone, xx, yy, minx, maxx, miny, maxy;
   String name;
   String[] tr;
-  public LineSegment(float x, float y, float xx, float yy) {
-    this.x = x;
-    this.y = y;
+  public LineSegment(float xone, float yone, float xx, float yy) {
+    this.xone = xone;
+    this.yone = yone;
     this.xx = xx;
     this.yy = yy;
-    maxx = (xx >= x ? xx : x);
-    minx = (xx < x ? xx : x);
-    maxy = (yy >= y ? yy : y);
-    miny = (yy < y ? yy : y);
+    maxx = (xx >= xone ? xx : xone);
+    minx = (xx < xone ? xx : xone);
+    maxy = (yy >= yone ? yy : yone);
+    miny = (yy < yone ? yy : yone);
   }
 
   public void setName(String name) {
@@ -26,8 +26,8 @@ class LineSegment {
       return false;
     }
     float leeway = height*.02;
-    float slope = (yy-y)/(xx-x);
-    float b = y - slope*x;
+    float slope = (yy-yone)/(xx-xone);
+    float b = yone - slope*xone;
 
 
     float wouldBeYPos = slope*xCandidate + b;
@@ -51,10 +51,10 @@ class LineSegment {
       //return false;
     }
 
-    float l1xgap = l1.x - l1.xx;
-    float l1ygap = l1.y - l1.yy;
-    float l2xgap = l2.x - l2.xx;
-    float l2ygap = l2.y - l2.yy;
+    float l1xgap = l1.xone - l1.xx;
+    float l1ygap = l1.yone - l1.yy;
+    float l2xgap = l2.xone - l2.xx;
+    float l2ygap = l2.yone - l2.yy;
 
     //Cramer's Rule, borrowed from SO: https://stackoverflow.com/questions/563198/whats-the-most-efficent-way-to-calculate-where-two-line-segments-intersect
     float s = (-l1ygap*(l1.xx-l2.xx)+ l1xgap*(l1.yy-l2.yy))/(-l2xgap * l1ygap + l1xgap*l2ygap);
@@ -71,12 +71,12 @@ class LineSegment {
     if (obj == null) {
       return false;
     }
-    if ((((LineSegment)obj).x == this.x) && (((LineSegment)obj).y == this.y) && (((LineSegment)obj).xx == this.xx) && (((LineSegment)obj).yy == this.yy)) {
+    if ((((LineSegment)obj).xone == this.xone) && (((LineSegment)obj).yone == this.yone) && (((LineSegment)obj).xx == this.xx) && (((LineSegment)obj).yy == this.yy)) {
       return true;
     } else return false;
   }
   public String toString() {
     //  return 
-    return this.x + ", " + this.y + " | " + this.xx + ", " + this.yy;
+    return this.xone + ", " + this.yone + " | " + this.xx + ", " + this.yy;
   }
 }
